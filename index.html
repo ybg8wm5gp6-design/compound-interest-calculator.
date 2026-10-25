@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#061326">
+<title>Калькулятор сложного процента</title>
+<style>
+:root{color-scheme:dark;--bg:#061326;--panel:#081b31;--line:#17436a;--text:#f3f7ff;--muted:#9ab8dc;--green:#18e3b2;--blue:#719de8}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#12365a 0,#061326 55%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:calc(16px + env(safe-area-inset-top)) 14px calc(100px + env(safe-area-inset-bottom));}
+.app{max-width:760px;margin:auto}.top{display:flex;gap:13px;align-items:center;margin:8px 2px 22px}.logo{width:58px;height:58px;border-radius:18px;background:#063d3b;color:var(--green);display:grid;place-items:center;font-size:29px;border:1px solid #087f76}.top h1{font-size:22px;line-height:1.15;margin:0 0 6px}.top p{color:var(--muted);font-size:13px;line-height:1.4;margin:0}.pill{margin-left:auto;align-self:flex-start;white-space:nowrap;background:#063d3b;color:var(--green);border-radius:20px;padding:8px 10px;font-size:11px;font-weight:700}
+.card{background:linear-gradient(145deg,rgba(9,30,53,.98),rgba(5,22,41,.98));border:1px solid var(--line);border-radius:19px;padding:17px;margin-bottom:13px;box-shadow:0 8px 26px #0002}.eyebrow{font-size:13px;color:var(--muted);margin:0 0 9px}.hero h2{font-size:clamp(29px,7.7vw,45px);letter-spacing:-1px;line-height:1.1;color:var(--green);margin:0 0 9px;overflow-wrap:anywhere}.sub{font-size:13px;color:var(--muted);margin:0 0 17px}.stats{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #1b4266;padding-top:14px;gap:12px}.stats>div+div{border-left:1px solid #1b4266;padding-left:13px}.stat-label{font-size:12px;color:var(--muted);margin-bottom:5px}.stat-value{font-size:clamp(15px,4vw,21px);font-weight:700;overflow-wrap:anywhere}.green{color:var(--green)}
+.section-title{font-size:17px;font-weight:700;margin:0 0 14px}.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{background:#07192d;border:1px solid var(--line);border-radius:13px;padding:12px;min-width:0}.field label,.range-label{display:block;color:var(--muted);font-size:12px;margin-bottom:8px;line-height:1.35}.field input[type=number]{width:100%;min-width:0;background:#061629;border:1px solid #28517a;border-radius:9px;padding:11px 9px;color:var(--text);font:inherit;font-size:16px;outline:none}.field input:focus{border-color:var(--green)}.rangebox{margin-top:15px}.range-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.range-head strong{color:var(--green);font-size:16px}input[type=range]{width:100%;accent-color:var(--green);margin:8px 0 2px}.range-ticks{display:flex;justify-content:space-between;color:var(--muted);font-size:10px}.radios{display:flex;gap:15px;flex-wrap:wrap;margin-top:15px;color:var(--muted);font-size:13px}.radios label{display:flex;align-items:center;gap:6px}.radios input{accent-color:var(--green)}
+.chart-wrap{height:235px;position:relative;width:100%}canvas{width:100%;height:100%;display:block}.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:7px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}.table-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.table-head h2{font-size:17px;margin:0}.year-count{font-size:11px;color:var(--green);background:#073a3a;border-radius:18px;padding:7px 9px}.table-scroll{overflow:auto;max-height:65vh;border:1px solid #173d61;border-radius:12px;margin-top:13px;-webkit-overflow-scrolling:touch}.year-table{border-collapse:collapse;width:100%;min-width:460px;font-size:12px;font-variant-numeric:tabular-nums}.year-table th,.year-table td{text-align:right;padding:10px 9px;border-bottom:1px solid #153653;white-space:nowrap}.year-table th{position:sticky;top:0;background:#0b223b;color:var(--muted);font-weight:600}.year-table th:first-child,.year-table td:first-child{text-align:left}.year-table td:last-child{color:var(--green);font-weight:650}.year-table tr:last-child td{border-bottom:0}.btn{width:100%;margin-top:12px;border:1px solid #2b5a82;background:transparent;color:var(--text);border-radius:13px;padding:13px;font-size:14px;font-weight:600}.btn:active{background:#12314e}.note{font-size:11px;color:#7697bd;line-height:1.5;margin:13px 2px}.footnav{position:fixed;bottom:0;left:0;right:0;padding:11px 20px calc(10px + env(safe-area-inset-bottom));background:#061326ee;border-top:1px solid #163c60;backdrop-filter:blur(16px);text-align:center;color:var(--green);font-size:12px}
+@media(min-width:650px){body{padding-left:22px;padding-right:22px}.layout{display:grid;grid-template-columns:1fr 1fr;gap:13px;align-items:start}.layout .card{margin-bottom:0}.hero{grid-column:1/-1}.table-card{grid-column:1/-1}.chart-wrap{height:270px}.top h1{font-size:26px}}
+@media(max-width:370px){.settings-grid{grid-template-columns:1fr}.top h1{font-size:19px}.card{padding:14px}.hero h2{font-size:29px}.stats{grid-template-columns:1fr}.stats>div+div{border-left:0;border-top:1px solid #1b4266;padding:12px 0 0}}
+</style>
+</head>
+<body>
+<main class="app">
+<header class="top"><div class="logo">↗</div><div><h1>Калькулятор сложного процента</h1><p>Ваш капитал растёт от вложений и начисленных процентов</p></div><div class="pill">50 ЛЕТ</div></header>
+<div class="layout">
+<section class="card hero">
+<p class="eyebrow">Итоговый капитал</p><h2 id="total">—</h2><p class="sub" id="subtitle">Прогноз инвестиций</p>
+<div class="stats"><div><div class="stat-label">Всего вложено</div><div class="stat-value" id="invested">—</div></div><div><div class="stat-label">Доход от процентов</div><div class="stat-value green" id="profit">—</div></div></div>
+</section>
+<section class="card">
+<h2 class="section-title">Параметры расчёта</h2>
+<div class="settings-grid">
+<div class="field"><label for="initial">Начальный капитал, ₽</label><input id="initial" type="number" min="0" step="1000" value="100000"></div>
+<div class="field"><label for="monthly">Пополнение в месяц, ₽</label><input id="monthly" type="number" min="0" step="1000" value="10000"></div>
+</div>
+<div class="rangebox"><div class="range-head"><label class="range-label" for="rate">Доходность в год</label><strong id="rateVal">12%</strong></div><input id="rate" type="range" min="0" max="30" step=".5" value="12"><div class="range-ticks"><span>0%</span><span>10%</span><span>20%</span><span>30%</span></div></div>
+<div class="rangebox"><div class="range-head"><label class="range-label" for="years">Срок инвестирования</label><strong id="yearsVal">50 лет</strong></div><input id="years" type="range" min="1" max="50" step="1" value="50"><div class="range-ticks"><span>1 год</span><span>25 лет</span><span>50 лет</span></div></div>
+<div class="radios"><label><input type="radio" name="timing" value="end" checked> В конце месяца</label><label><input type="radio" name="timing" value="begin"> В начале месяца</label></div>
+<button class="btn" id="reset">↻ Сбросить настройки</button>
+</section>
+<section class="card">
+<div class="table-head"><h2 class="section-title" style="margin:0">Рост капитала</h2><span class="year-count" id="chartYears">50 лет</span></div>
+<div class="chart-wrap"><canvas id="chart" aria-label="График роста капитала"></canvas></div>
+<div class="legend"><span><i class="dot" style="background:#18e3b2"></i>Капитал</span><span><i class="dot" style="background:#719de8"></i>Собственные вложения</span></div>
+</section>
+<section class="card table-card">
+<div class="table-head"><h2>Таблица по годам</h2><span class="year-count" id="rowCount">51 строка</span></div>
+<div class="table-scroll" id="tableScroll"><table class="year-table"><thead><tr><th>Год</th><th>Вложено</th><th>Капитал</th><th>Прибыль</th></tr></thead><tbody id="rows"></tbody></table></div>
+<button class="btn" id="copy">▢ Копировать таблицу</button>
+<button class="btn" id="copySummary">Копировать итоговый расчёт</button>
+</section>
+</div>
+<p class="note">Математическая модель: эффективная годовая доходность преобразуется в эквивалентную месячную ставку. Предполагаются регулярные пополнения. Налоги, комиссии и инфляция не учитываются. Реальная доходность не гарантирована.</p>
+</main>
+<div class="footnav">▦ &nbsp; КАЛЬКУЛЯТОР</div>
+<script>
+const $=id=>document.getElementById(id);
+const money=n=>Math.round(n).toLocaleString('ru-RU')+' ₽';
+const compact=n=>{if(!Number.isFinite(n))return '—';if(n>=1e9)return (n/1e9).toLocaleString('ru-RU',{maximumFractionDigits:2})+' млрд ₽';if(n>=1e6)return (n/1e6).toLocaleString('ru-RU',{maximumFractionDigits:2})+' млн ₽';return Math.round(n).toLocaleString('ru-RU')+' ₽'};
+let data=[];
+function calculate(y, p, m, annual, timing){
+ const months=y*12, monthlyRate=Math.pow(1+annual/100,1/12)-1;
+ const factor=Math.pow(1+monthlyRate,months);
+ const regular=monthlyRate===0?m*months:m*(factor-1)/monthlyRate;
+ return p*factor+regular*(timing==='begin'?1+monthlyRate:1);
+}
+function drawChart(){
+ const canvas=$('chart'),ctx=canvas.getContext('2d'),rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
+ canvas.width=Math.max(1,rect.width*dpr);canvas.height=Math.max(1,rect.height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
+ const w=rect.width,h=rect.height,left=45,right=9,top=12,bottom=27,pw=w-left-right,ph=h-top-bottom;
+ ctx.clearRect(0,0,w,h);if(!data.length)return;
+ const max=Math.max(1,data[data.length-1].capital)*1.05;
+ ctx.font='10px -apple-system, sans-serif';ctx.lineWidth=1;ctx.strokeStyle='#153653';ctx.fillStyle='#9ab8dc';ctx.textAlign='right';
+ for(let i=0;i<=4;i++){let y=top+ph-i*ph/4;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(w-right,y);ctx.stroke();ctx.fillText(compact(max*i/4).replace(' ₽',''),left-6,y+3)}
+ for(let i=0;i<=4;i++){let x=left+pw*i/4;ctx.beginPath();ctx.moveTo(x,top);ctx.lineTo(x,top+ph);ctx.stroke();ctx.textAlign='center';ctx.fillText(String(Math.round(Number($('years').value)*i/4)),x,h-10)}
+ function line(key,color,fill){ctx.beginPath();data.forEach((d,i)=>{let x=left+pw*i/(data.length-1||1),y=top+ph-ph*d[key]/max;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});if(fill){ctx.lineTo(left+pw,top+ph);ctx.lineTo(left,top+ph);ctx.closePath();let g=ctx.createLinearGradient(0,top,0,top+ph);g.addColorStop(0,'#18e3b238');g.addColorStop(1,'#18e3b203');ctx.fillStyle=g;ctx.fill();ctx.beginPath();data.forEach((d,i)=>{let x=left+pw*i/(data.length-1||1),y=top+ph-ph*d[key]/max;i?ctx.lineTo(x,y):ctx.moveTo(x,y)})}ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.stroke()}
+ line('invested','#719de8',false);line('capital','#18e3b2',true);
+}
+function render(){
+ const p=Math.max(0,Number($('initial').value)||0),m=Math.max(0,Number($('monthly').value)||0),annual=Number($('rate').value),years=Number($('years').value),timing=document.querySelector('input[name="timing"]:checked').value;
+ $('rateVal').textContent=annual+'%';$('yearsVal').textContent=years+(years===1?' год':years>=2&&years<=4?' года':' лет');$('chartYears').textContent=$('yearsVal').textContent;
+ data=Array.from({length:years+1},(_,y)=>{const invested=p+m*y*12,capital=calculate(y,p,m,annual,timing);return {year:y,invested,capital,profit:capital-invested}});
+ const last=data[data.length-1];$('total').textContent=compact(last.capital);$('subtitle').textContent=`Через ${years} ${years===1?'год':years>=2&&years<=4?'года':'лет'} при ставке ${annual}% годовых`;$('invested').textContent=compact(last.invested);$('profit').textContent=compact(last.profit);
+ $('rowCount').textContent=data.length+' '+(data.length===1?'строка':data.length<5?'строки':'строк');
+ $('rows').innerHTML=data.map(d=>`<tr><td>${d.year}</td><td>${money(d.invested)}</td><td>${money(d.capital)}</td><td>${money(d.profit)}</td></tr>`).join('');
+ drawChart();
+}
+['initial','monthly','rate','years'].forEach(id=>$(id).addEventListener('input',render));
+document.querySelectorAll('input[name="timing"]').forEach(el=>el.addEventListener('change',render));
+$('reset').addEventListener('click',()=>{$('initial').value=100000;$('monthly').value=10000;$('rate').value=12;$('years').value=50;document.querySelector('input[name="timing"][value="end"]').checked=true;render()});
+$('copy').addEventListener('click',async()=>{const txt='Год\tВложено\tКапитал\tПрибыль\n'+data.map(d=>[d.year,money(d.invested),money(d.capital),money(d.profit)].join('\t')).join('\n');await copyText(txt,$('copy'))});
+$('copySummary').addEventListener('click',async()=>{const last=data[data.length-1];await copyText(`Калькулятор сложного процента\nНачальный капитал: ${money(Number($('initial').value)||0)}\nЕжемесячное пополнение: ${money(Number($('monthly').value)||0)}\nДоходность: ${$('rate').value}% годовых\nСрок: ${$('years').value} лет\nИтоговый капитал: ${money(last.capital)}\nВсего вложено: ${money(last.invested)}\nДоход от процентов: ${money(last.profit)}`,$('copySummary'))});
+async function copyText(text,button){try{await navigator.clipboard.writeText(text);button.textContent='✓ Скопировано';setTimeout(()=>button.textContent=button.id==='copy'?'▢ Копировать таблицу':'Копировать итоговый расчёт',1800)}catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();button.textContent='✓ Скопировано';setTimeout(()=>button.textContent=button.id==='copy'?'▢ Копировать таблицу':'Копировать итоговый расчёт',1800)}}
+window.addEventListener('resize',drawChart);render();
+</script>
+</body>
+</html>
